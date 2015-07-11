@@ -93,22 +93,3 @@ func ParseHS256(token string, secret []byte) (Claims, error) {
 	
 	return claims, nil
 }
-
-func main() {
-	token, err := SignHS256(Claims{
-		"uid": 15,
-		"name": "elwinar",
-	}, []byte("jackmarshall"))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(token)
-	
-	claims, err := ParseHS256(token, []byte("jackmarshall"))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(claims)
-}
