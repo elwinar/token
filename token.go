@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"strings"
+	"time"
 )
 
 var b64 = base64.URLEncoding
@@ -91,6 +92,17 @@ func ParseHS256(token string, secret []byte) (Claims, error) {
 	err = json.Unmarshal(decodedClaims, &claims)
 	if err != nil {
 		return nil, err
+	}
+
+	if exp, found := claims["exp"]; found {
+		exp, ok := exp.(int64)
+		if !ok {
+			return nil, errors.New("exp claim must be a NumericalDate")
+		}
+
+		if time.Unix(exp, 0).Before(time.Now()) {
+			return nil, errors.New("expired token")
+		}
 	}
 
 	return claims, nil

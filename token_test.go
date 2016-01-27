@@ -62,7 +62,7 @@ func TestParseHS256(t *testing.T) {
 		err    bool
 	}{
 		{
-			token:  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiamFja21hcnNoYWxsIn0=.37bL9nsSNiCJdzS9QTPwNkk05LN4mqbXFDJZs6SmW-U=",
+			token:  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiamFja21hcnNoYWxsIn0=.37bL9nsSNiCJdzS9QTPwNkk05LN4mqbXFDJZs6SmW-U=", // Valid token
 			secret: []byte("secret"),
 			claims: Claims{
 				"user": "jackmarshall",
@@ -70,19 +70,19 @@ func TestParseHS256(t *testing.T) {
 			err: false,
 		},
 		{
-			token:  "thisisnotavalidtoken",
+			token:  "thisisnotavalidtoken", // No dots
 			secret: []byte("secret"),
 			claims: nil,
 			err:    true,
 		},
 		{
-			token:  "thisisnot.a.validtoken",
+			token:  "thisisnot.a.validtoken", // Blattantly invalid
 			secret: []byte("secret"),
 			claims: nil,
 			err:    true,
 		},
 		{
-			token:  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiamFja21hcnNoYWxsIn0=.37bL9nsSNiCJdzS9QTPwNkk05LN4mqbXFDJZs6SmW-U=",
+			token:  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiamFja21hcnNoYWxsIn0=.37bL9nsSNiCJdzS9QTPwNkk05LN4mqbXFDJZs6SmW-U=", // Wrong secret
 			secret: []byte("wrongsecret"),
 			claims: nil,
 			err:    true,
@@ -125,6 +125,12 @@ func TestParseHS256(t *testing.T) {
 		},
 		{
 			token:  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ8.eyJ1c2VyIjoiamFja21hcnNoYWxsIn1.Tlsu8ZoDEuMAHq8BBEFj OSKpA0FYjnoVtqlM_L9RjIA", // Invalid base64 in signature
+			secret: []byte("secret"),
+			claims: nil,
+			err:    true,
+		},
+		{
+			token:  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImV4cCI6MX0.-x_DAYIg4R4R9oZssqgWyJP_oWO1ESj8DgKrGCk7i5o", // Expired token
 			secret: []byte("secret"),
 			claims: nil,
 			err:    true,
