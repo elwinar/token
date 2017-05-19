@@ -95,12 +95,12 @@ func ParseHS256(token string, secret []byte) (Claims, error) {
 	}
 
 	if exp, found := claims["exp"]; found {
-		exp, ok := exp.(int64)
+		exp, ok := exp.(float64)
 		if !ok {
 			return nil, errors.New("exp claim must be a NumericalDate")
 		}
 
-		if time.Unix(exp, 0).Before(time.Now()) {
+		if time.Unix(int64(exp), 0).Before(time.Now()) {
 			return nil, errors.New("expired token")
 		}
 	}
